@@ -166,6 +166,4 @@ int main() {
     cout << "n == " << n << endl;
     cout << "e == " << e << endl;
     cout << "d == " << d << endl;
-
-
 }
