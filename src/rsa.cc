@@ -128,8 +128,7 @@ ttmath::UInt<num_length> extended_gcd(ttmath::UInt<num_length> a, ttmath::UInt<n
 
 
 int main() {
-    for (int i = 0; i < 100; ++i) {
-    srand(i);
+    srand(0);
 
     using namespace std;
 
@@ -150,36 +149,23 @@ int main() {
 
     ttmath::UInt<kWORDS> d = extended_gcd<kWORDS>(e, phi_n);
 
-    ttmath::UInt<kWORDS> message = 0;
-    for (size_t i = 0; i < kBITS / sizeof(int) / 8 / 2; ++i) {
-        message |= rand();
-        message <<= 8 * sizeof(int);
-    }
+    ttmath::UInt<kWORDS> message = rand();
 
     ttmath::UInt<kWORDS> cipher = pow_mod<kWORDS>(message, e, n);
     ttmath::UInt<kWORDS> plain = pow_mod(cipher, d, n);
-    // cipher = pow_mod(message, d, n);
-    // plain = pow_mod<kWORDS>(cipher, e, n);
+    // cout << message << endl << plain << endl;
+    assert(plain == message);
 
-    if (message != plain) {
-        cerr << "Error! " << endl;
+    ttmath::UInt<kWORDS> signature = pow_mod(message, d, n);
+    plain = pow_mod<kWORDS>(signature, e, n);
+    // cout << message << endl << plain << endl;
+    assert(plain == message);
 
-        cerr << "seed == " << i << endl;
-        cout << "p == " << p << endl;
-        cout << "q == " << q << endl;
-        cout << "n == " << n << endl;
-        cout << "e == " << e << endl;
-        cout << "d == " << d << endl;
-        cout << "phi(n) == " << phi_n << endl;
-        cout << "------------------------\n";
+    cout << "p == " << p << endl;
+    cout << "q == " << q << endl;
+    cout << "n == " << n << endl;
+    cout << "e == " << e << endl;
+    cout << "d == " << d << endl;
 
-        cout << "message == " << message << endl;
-        cout << "cipher == " << cipher << endl;
-        cout << "plain == " << plain << endl;
 
-        return 1;
-    } else {
-        cout << "seed == " << i << endl;
-    }
-    }
 }
